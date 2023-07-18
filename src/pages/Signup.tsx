@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import { useContext, useState } from "react";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 
 import { auth, db } from "../config/firebase";
 import { doc, setDoc } from "firebase/firestore";
 import { UserType } from "../types";
+import { AuthContext } from "../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 export default function Signup() {
   const [name, setName] = useState("");
@@ -11,6 +13,9 @@ export default function Signup() {
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
+
+  const { dispatch } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   const onSubmit = async (e: any) => {
     try {
@@ -26,6 +31,8 @@ export default function Signup() {
       };
 
       await setDoc(doc(db, "users", res.user.uid), user);
+      dispatch({ type: "SIGNIN", payload: res.user });
+      navigate("/");
     } catch (error: any) {
       const errorMessage =
         error?.code === "auth/email-already-in-use"
