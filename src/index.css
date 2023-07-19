@@ -1,3 +1,20 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+body {
+    @apply h-screen w-screen bg-gray-300;
+}
+
+@layer components {
+    .btn {
+        @apply bg-pink-600 hover:bg-pink-500 cursor-pointer p-2 rounded-lg text-white;
+    }
+    .input-field {
+        @apply flex gap-y-2 flex-col;
+    }
+    .input {
+        @apply border-black border p-2 rounded-lg;
+    }
+}
+    
