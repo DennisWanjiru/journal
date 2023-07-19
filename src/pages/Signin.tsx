@@ -80,8 +80,11 @@ export default function Signin() {
 
         <p>
           Do not have an account?{" "}
-          <button className="text-blue-700 ml-1 underline">
-            Sing up here{" "}
+          <button
+            className="text-blue-700 ml-1 underline font-medium"
+            onClick={() => navigate("/signup")}
+          >
+            Sign up
           </button>
         </p>
       </form>

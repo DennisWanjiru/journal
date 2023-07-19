@@ -3,18 +3,27 @@
 @tailwind utilities;
 
 body {
-    @apply h-screen w-screen bg-gray-300;
+    @apply h-screen w-screen bg-gray-200;
+}
+
+@layer base {
+ label {
+    @apply font-medium;
+  }
+  textarea {
+    @apply h-44
+  }
 }
 
 @layer components {
     .btn {
-        @apply bg-pink-600 hover:bg-pink-500 cursor-pointer p-2 rounded-lg text-white;
+        @apply bg-pink-600 hover:bg-pink-500 cursor-pointer p-2 rounded-lg text-white disabled:bg-gray-400 disabled:cursor-not-allowed;
     }
     .input-field {
         @apply flex gap-y-2 flex-col;
     }
     .input {
-        @apply border-black border p-2 rounded-lg;
+        @apply border-gray-400 border p-2 rounded-lg focus:border-black;
     }
 }
     
