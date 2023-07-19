@@ -1,9 +1,9 @@
-import React, { useContext, useEffect, useState } from "react";
+import { SyntheticEvent, useContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { signInWithEmailAndPassword } from "firebase/auth";
 
 import { auth } from "../config/firebase";
 import { AuthContext } from "../context/AuthContext";
-import { useNavigate } from "react-router-dom";
 
 export default function Signin() {
   const [email, setEmail] = useState("");
@@ -17,7 +17,7 @@ export default function Signin() {
     setError("");
   }, [password, email]);
 
-  const onSubmit = async (e: any) => {
+  const onSubmit = async (e: SyntheticEvent) => {
     try {
       setIsLoading(true);
       e.preventDefault();

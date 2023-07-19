@@ -1,11 +1,11 @@
-import { useContext, useState } from "react";
+import { SyntheticEvent, useContext, useState } from "react";
 import { createUserWithEmailAndPassword } from "firebase/auth";
+import { useNavigate } from "react-router-dom";
 
 import { auth, db } from "../config/firebase";
 import { doc, setDoc } from "firebase/firestore";
 import { UserType } from "../types";
 import { AuthContext } from "../context/AuthContext";
-import { useNavigate } from "react-router-dom";
 
 export default function Signup() {
   const [name, setName] = useState("");
@@ -17,7 +17,7 @@ export default function Signup() {
   const { dispatch } = useContext(AuthContext);
   const navigate = useNavigate();
 
-  const onSubmit = async (e: any) => {
+  const onSubmit = async (e: SyntheticEvent) => {
     try {
       setIsLoading(true);
       e.preventDefault();
