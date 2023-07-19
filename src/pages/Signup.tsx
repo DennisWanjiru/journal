@@ -27,7 +27,6 @@ export default function Signup() {
       const user: UserType = {
         name,
         email,
-        journaledToday: false,
       };
 
       await setDoc(doc(db, "users", res.user.uid), user);

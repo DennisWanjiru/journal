@@ -7,8 +7,8 @@ import { AuthContext } from "../context/AuthContext";
 import { db } from "../config/firebase";
 
 export default function Home() {
-  const [content, setContent] = useState("");
   const navigate = useNavigate();
+  const [content, setContent] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
 
@@ -28,6 +28,7 @@ export default function Home() {
       const journal: JournalType = {
         content,
         authorId: currentUser.uid,
+        authorEmail: currentUser.email as string,
         timestamp: Timestamp.fromDate(new Date()),
       };
 
