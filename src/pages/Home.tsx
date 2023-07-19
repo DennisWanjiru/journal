@@ -41,24 +41,30 @@ export default function Home() {
     }
   };
   return (
-    <form className="flex flex-col" onSubmit={onSubmit}>
-      <label>Journal</label>
-      <textarea
-        placeholder="Write your journal here ..."
-        maxLength={500}
-        value={content}
-        onChange={(e) => setContent(e.target.value)}
-      />
-
-      {error ? <span className="text-red-600">{error}</span> : null}
-
-      <button
-        disabled={content.length < 10}
-        className="bg-purple-500 text-white disabled:bg-gray-400 disabled:cursor-not-allowed"
-        type="submit"
+    <div className="flex w-full h-screen items-center justify-center">
+      <form
+        className="flex w-1/3 justify-center flex-col bg-white p-20 gap-y-5"
+        onSubmit={onSubmit}
       >
-        {submitting ? "Sharing..." : "Share"}
-      </button>
-    </form>
+        <h3 className="font-semibold text-2xl">Create journal</h3>
+
+        <div className="input-field">
+          <label>Content</label>
+          <textarea
+            placeholder="Write your journal here ..."
+            maxLength={500}
+            value={content}
+            className="input"
+            onChange={(e) => setContent(e.target.value)}
+          />
+        </div>
+
+        {error ? <span className="text-red-600">{error}</span> : null}
+
+        <button disabled={content.length < 10} className="btn" type="submit">
+          {submitting ? "Sharing..." : "Share"}
+        </button>
+      </form>
+    </div>
   );
 }
