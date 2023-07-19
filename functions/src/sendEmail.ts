@@ -23,10 +23,6 @@ const sendEmail = async (mailOptions: Options) => {
       subject: "Journal from a fellow journaler",
       ...mailOptions,
     });
-
-    console.log(
-      `Email sent successfully. ${mailOptions.to} : ${mailOptions.text}`
-    );
   } catch (error) {
     console.error("Error sending email:", error);
   }

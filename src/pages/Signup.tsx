@@ -1,4 +1,4 @@
-import { SyntheticEvent, useContext, useState } from "react";
+import { SyntheticEvent, useContext, useEffect, useState } from "react";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 
@@ -6,6 +6,8 @@ import { auth, db } from "../config/firebase";
 import { doc, setDoc } from "firebase/firestore";
 import { UserType } from "../types";
 import { AuthContext } from "../context/AuthContext";
+import { validateEmail, validateName, validatePassword } from "../validations";
+import classNames from "classnames";
 
 export default function Signup() {
   const [name, setName] = useState("");
@@ -13,9 +15,22 @@ export default function Signup() {
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+  const [emailError, setEmailError] = useState<string | null>(null);
+  const [showEmailError, setShowEmailError] = useState(false);
+  const [showPasswordError, setShowPasswordError] = useState(false);
+  const [nameError, setNameError] = useState<string | null>(null);
+  const [showNameError, setShowNameError] = useState(false);
 
   const { dispatch } = useContext(AuthContext);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    setError("");
+    setNameError(validateName(name));
+    setEmailError(validateEmail(email));
+    setPasswordError(validatePassword(password));
+  }, [password, email, name]);
 
   const onSubmit = async (e: SyntheticEvent) => {
     try {
@@ -51,16 +66,31 @@ export default function Signup() {
         className="flex w-1/4 justify-center flex-col bg-white p-20 gap-y-5"
       >
         <h3 className="font-semibold text-2xl">Sign up</h3>
+        <div className="h-2 flex items-center">
+          <span className="text-red-600 text-sm self-center">{error}</span>
+        </div>
 
         <div className="input-field">
           <label>Name</label>
           <input
             type="text"
             value={name}
-            className="input"
+            className={classNames("input", {
+              "border-red-600": nameError && showNameError,
+            })}
             placeholder="Enter your name"
             onChange={(e) => setName(e.target.value)}
+            onBlur={() => setShowNameError(!!emailError)}
           />
+          <div
+            className={classNames("h-2 flex items-center opacity-0", {
+              "opacity-100": showNameError,
+            })}
+          >
+            <span className="text-red-600 text-xs self-center">
+              {nameError}
+            </span>
+          </div>
         </div>
 
         <div className="input-field">
@@ -68,13 +98,25 @@ export default function Signup() {
           <input
             type="email"
             value={email}
-            className="input"
+            className={classNames("input", {
+              "border-red-600": emailError && showEmailError,
+            })}
             placeholder="Enter your email"
             onChange={(e) => {
               setEmail(e.target.value);
               setError("");
             }}
+            onBlur={() => setShowEmailError(!!emailError)}
           />
+          <div
+            className={classNames("h-2 flex items-center opacity-0", {
+              "opacity-100": showEmailError,
+            })}
+          >
+            <span className="text-red-600 text-xs self-center">
+              {emailError}
+            </span>
+          </div>
         </div>
 
         <div className="input-field">
@@ -82,17 +124,37 @@ export default function Signup() {
           <input
             type="password"
             value={password}
-            className="input"
+            className={classNames("input", {
+              "border-red-600": passwordError && showPasswordError,
+            })}
             placeholder="Enter yout password"
             onChange={(e) => setPassword(e.target.value)}
+            onBlur={() => setShowPasswordError(!!passwordError)}
           />
+
+          <div
+            className={classNames("h-2 flex items-center opacity-0", {
+              "opacity-100": showPasswordError,
+            })}
+          >
+            <span className="text-red-600 text-xs self-center">
+              {passwordError}
+            </span>
+          </div>
         </div>
 
-        <div className="h-4 flex items-center -mt-4">
-          <span className="text-red-600 text-sm self-center">{error}</span>
-        </div>
-
-        <button className="btn -mt-2" type="submit">
+        <button
+          className="btn -mt-2"
+          type="submit"
+          disabled={
+            !name.length ||
+            !email.length ||
+            !password.length ||
+            !!passwordError ||
+            !!emailError ||
+            !!nameError
+          }
+        >
           {isLoading ? "Signing up..." : "Sign up"}
         </button>
 

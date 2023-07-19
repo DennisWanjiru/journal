@@ -4,17 +4,26 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 
 import { auth } from "../config/firebase";
 import { AuthContext } from "../context/AuthContext";
+import classNames from "classnames";
+import { validateEmail, validatePassword } from "../validations";
 
 export default function Signin() {
+  const navigate = useNavigate();
+  const { dispatch } = useContext(AuthContext);
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
-  const { dispatch } = useContext(AuthContext);
-  const navigate = useNavigate();
+  const [emailError, setEmailError] = useState<string | null>(null);
+  const [passwordError, setPasswordError] = useState("");
+  const [showEmailError, setShowEmailError] = useState(false);
+  const [showPasswordError, setShowPasswordError] = useState(false);
 
   useEffect(() => {
     setError("");
+    setEmailError(validateEmail(email));
+    setPasswordError(validatePassword(password));
   }, [password, email]);
 
   const onSubmit = async (e: SyntheticEvent) => {
@@ -42,21 +51,34 @@ export default function Signin() {
     <div className="flex w-full h-screen items-center justify-center">
       <form
         onSubmit={onSubmit}
-        className="flex w-1/4 justify-center flex-col bg-white p-20 gap-y-5"
+        className="flex w-1/4 justify-center flex-col bg-white p-20 gap-y-4"
       >
         <h3 className="font-semibold text-2xl">Sign in</h3>
+        <div className="h-2 flex items-center">
+          <span className="text-red-600 text-sm self-center">{error}</span>
+        </div>
+
         <div className="input-field">
           <label>Email</label>
           <input
             type="email"
             value={email}
-            className="input"
+            className={classNames("input", {
+              "border-red-600": emailError && showEmailError,
+            })}
             placeholder="Enter your email"
-            onChange={(e) => {
-              setEmail(e.target.value);
-              setError("");
-            }}
+            onChange={(e) => setEmail(e.target.value)}
+            onBlur={() => setShowEmailError(!!emailError)}
           />
+          <div
+            className={classNames("h-2 flex items-center opacity-0", {
+              "opacity-100": showEmailError,
+            })}
+          >
+            <span className="text-red-600 text-xs self-center">
+              {emailError}
+            </span>
+          </div>
         </div>
 
         <div className="input-field">
@@ -64,17 +86,32 @@ export default function Signin() {
           <input
             type="password"
             value={password}
-            className="input"
+            className={classNames("input", {
+              "border-red-600": passwordError && showPasswordError,
+            })}
             placeholder="Enter yout password"
             onChange={(e) => setPassword(e.target.value)}
+            onBlur={() => setShowPasswordError(!!passwordError)}
           />
+
+          <div
+            className={classNames("h-2 flex items-center opacity-0", {
+              "opacity-100": showPasswordError,
+            })}
+          >
+            <span className="text-red-600 text-xs self-center">
+              {passwordError}
+            </span>
+          </div>
         </div>
 
-        <div className="h-4 flex items-center -mt-4">
-          <span className="text-red-600 text-sm self-center">{error}</span>
-        </div>
-
-        <button className="btn -mt-2" type="submit">
+        <button
+          className="btn"
+          type="submit"
+          disabled={
+            !email.length || !password.length || !!passwordError || !!emailError
+          }
+        >
           {isLoading ? "Signing in..." : "Sign In"}
         </button>
 
