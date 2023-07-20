@@ -60,10 +60,10 @@ export default function Signup() {
   };
 
   return (
-    <div className="flex w-full h-screen items-center justify-center">
+    <div className="flex w-full bg-white h-screen items-center justify-center md:bg-gray-200">
       <form
         onSubmit={onSubmit}
-        className="flex w-1/4 justify-center flex-col bg-white p-20 gap-y-5"
+        className="flex 2xl:w-1/4 xl:w-1/3 lg:w-1/2 md:w-3/4 justify-center flex-col bg-white sm:p-20 gap-y-4 w-screen p-10"
       >
         <h3 className="font-semibold text-2xl">Sign up</h3>
         <div className="h-2 flex items-center">
